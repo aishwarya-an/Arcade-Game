@@ -3,9 +3,53 @@ var PLAYER_BOTTOM_BOUNDARY = 405;
 var PLAYER_RIGHT_BOUNDARY = 900;
 var PLAYER_X = 400;
 var LIVES = 3;
+
+// Global variables
 var collisionAudio = new Audio('audio/loseLife.wav');
 var getGemAudio = new Audio('audio/getGem.wav');
+var playing = false;
+var selectedPlayer;
+var characters = ['images/char-boy.png',
+    'images/char-cat-girl.png',
+    'images/char-horn-girl.png',
+    'images/char-pink-girl.png',
+    'images/char-princess-girl.png'];
 
+
+/* @description The selector used for character selection
+ * @constructor
+*/
+var Selector = function(){
+  this.sprite = 'images/Selector.png';
+  this.x = 152;
+  this.y = 350;
+  this.selected = 0;
+};
+
+// @description Renders the selector to the page
+Selector.prototype.render = function(){
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+/* @description Handles the movement ofthe seleector and on pressing 'enter'
+ * the game begins. Called by EventListener
+ * @param {string} input - the value of the keypress
+*/
+Selector.prototype.handleInput = function(input){
+  if(input == 'left' && this.x - 101 >= 152){
+    this.x -= 101;
+    this.selected--;
+  }
+  else if(input == 'right' && this.x + 101 <= 566){
+    this.x += 101;
+    this.selected++;
+  }
+  else if(input == 'enter'){
+    selectedPlayer = this.selected;
+    playing = true;
+    player.reset();
+  }
+};
 
 /* @description Enemies our player must avoid
  * @constructor
@@ -51,7 +95,7 @@ Enemy.prototype.render = function() {
 var Player = function() {
   this.x = PLAYER_X;
   this.y = PLAYER_BOTTOM_BOUNDARY;
-  this.sprite = 'images/char-cat-girl.png';
+  this.sprite = characters[selectedPlayer];
   this.width = 35;
   this.height = 40;
 };
@@ -111,6 +155,7 @@ Player.prototype.handleInput = function(input) {
 Player.prototype.reset = function(){
   this.x = PLAYER_X;
   this.y = PLAYER_BOTTOM_BOUNDARY;
+  this.sprite = characters[selectedPlayer];
 };
 
 
@@ -218,8 +263,12 @@ var Gem = function(x, y){
 // @description Draws the gem on the canvas
 Gem.prototype.render = function(){
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
+// @description Utitlity function
+function initLoad(){
+  selector = new Selector();
+}
 
 // Instantiating the Enemy, Player, Life class to run the game
 var allEnemies = [new Enemy(60, 90), new Enemy(145, 50), new Enemy(225, 40), 
@@ -234,11 +283,15 @@ var allGems = [new Gem(400, 60), new Gem(800, 145), new Gem(100, 145)];
 */
 document.addEventListener('keyup', function(e) {
   var allowedKeys = {
+    13: 'enter',
     37: 'left',
     38: 'up',
     39: 'right',
     40: 'down'
 };
   
-  player.handleInput(allowedKeys[e.keyCode]);
+  if(playing)  
+    player.handleInput(allowedKeys[e.keyCode]);
+  else
+    selector.handleInput(allowedKeys[e.keyCode]);
 });

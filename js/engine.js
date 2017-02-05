@@ -64,6 +64,7 @@ var Engine = (function(global) {
    * game loop.
    */
   function init() {
+    initLoad();
     reset();
     lastTime = Date.now();
     main();
@@ -103,39 +104,42 @@ var Engine = (function(global) {
    * they are just drawing the entire screen over and over.
    */
   function render() {
-    /* This array holds the relative URL to the image used
-     * for that particular row of the game level.
-     */
-    var rowImages = [
-      'images/water-block.png',   // Top row is water
-      'images/grass-block.png',   // Row 1 of 3 of stone
-      'images/grass-block.png',   // Row 2 of 3 of stone
-      'images/grass-block.png',   // Row 3 of 3 of stone
-      'images/grass-block.png',   // Row 1 of 2 of grass
-      'images/stone-block.png'    // Row 2 of 2 of grass
-        ],
-      numRows = 6,
-      numCols = 9,
-      row, col;
+    if(playing == true){
+      /* This array holds the relative URL to the image used
+       * for that particular row of the game level.
+       */
+      var rowImages = [
+        'images/water-block.png',   // Top row is water
+        'images/grass-block.png',   // Row 1 of 3 of stone
+        'images/grass-block.png',   // Row 2 of 3 of stone
+        'images/grass-block.png',   // Row 3 of 3 of stone
+        'images/grass-block.png',   // Row 1 of 2 of grass
+        'images/stone-block.png'    // Row 2 of 2 of grass
+          ],
+        numRows = 6,
+        numCols = 9,
+        row, col;
 
-    /* Loop through the number of rows and columns we've defined above
-     * and, using the rowImages array, draw the correct image for that
-     * portion of the "grid"
-     */
-    for (row = 0; row < numRows; row++) {
-      for (col = 0; col < numCols; col++) {
-        /* The drawImage function of the canvas' context element
-         * requires 3 parameters: the image to draw, the x coordinate
-         * to start drawing and the y coordinate to start drawing.
-         * We're using our Resources helpers to refer to our images
-         * so that we get the benefits of caching these images, since
-         * we're using them over and over.
-         */
-        ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+      /* Loop through the number of rows and columns we've defined above
+       * and, using the rowImages array, draw the correct image for that
+       * portion of the "grid"
+       */
+      for (row = 0; row < numRows; row++) {
+        for (col = 0; col < numCols; col++) {
+          /* The drawImage function of the canvas' context element
+           * requires 3 parameters: the image to draw, the x coordinate
+           * to start drawing and the y coordinate to start drawing.
+           * We're using our Resources helpers to refer to our images
+           * so that we get the benefits of caching these images, since
+           * we're using them over and over.
+           */
+          ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+        }
       }
-    }
 
-    renderEntities();
+      renderEntities();
+    } else
+        menu();
   }
 
   /* This function is called by the render function and is called on each game
@@ -163,7 +167,57 @@ var Engine = (function(global) {
    * those sorts of things. It's only called once by the init() method.
    */
   function reset() {
-    // noop
+    menu();
+  }
+
+  /* This function draws the main menu of the game. The main menu is used to 
+   * choose the type of player. This is called at the end of the game i.e
+   * if the player wins or loses.
+   */
+  function menu() {
+	// Displaying the game description
+	var gameDescription1 = "Collect all Gems, avoid the Bugs and reach the Water to win!";
+    var gameDescription2 ="Use arrow keys to move your player";
+    var gameDescription3 = "...Good Luck!";
+    var gameDescription4 = "Score increases by:";
+    var gameDescription5 = "30 if you collect gems";
+    var gameDescription6 = "20 if you reach the river";
+    ctx.font = 'bold 20pt Impact';
+    ctx.textAlign = 'center';
+
+    ctx.fillStyle = '#556B2F';
+    ctx.fillText(gameDescription1, canvas.width/2, 78);
+    ctx.fillText(gameDescription2, canvas.width/2, 110);
+    ctx.fillText(gameDescription4, canvas.width/2, 160);
+    ctx.fillText(gameDescription5, canvas.width/2, 200);
+    ctx.fillText(gameDescription6, canvas.width/2, 240);
+    ctx.fillText(gameDescription3, canvas.width/2, 310);
+
+    ctx.strokeStyle = '#cccccc';
+    ctx.lineWidth = 1;
+    ctx.strokeText(gameDescription1, canvas.width/2, 78);
+    ctx.strokeText(gameDescription2, canvas.width/2, 110);
+    ctx.strokeText(gameDescription4, canvas.width/2, 160);
+    ctx.strokeText(gameDescription5, canvas.width/2, 200);
+    ctx.strokeText(gameDescription6, canvas.width/2, 240);
+    ctx.strokeText(gameDescription3, canvas.width/2, 310);
+
+		// Displaying the characters for the player to choose
+		ctx.font = "bold 20pt Verdana";
+    ctx.textAlign = 'center';
+
+    ctx.fillStyle = "#556B2F";
+    ctx.fillText("Choose your Player. Press Enter to Start Game", 
+        (canvas.width*0.5), 340);
+
+    ctx.strokeStyle = '#cccccc';
+    ctx.lineWidth = 1;
+    ctx.strokeText("Choose your Player. Press Enter to Start Game", 
+        (canvas.width*0.5), 340);
+
+    selector.render();
+    for (var i = 0; i < characters.length; i++)
+      ctx.drawImage(Resources.get(characters[i]), i * 101 + 152, 350);
   }
 
   /* Go ahead and load all of the images we know we're going to need to
@@ -178,7 +232,12 @@ var Engine = (function(global) {
       'images/char-cat-girl.png',
       'images/Heart.png',
       'images/Gem\ Blue.png',
-      'images/Key.png'
+      'images/Key.png',
+      'images/Selector.png',
+      'images/char-boy.png',
+      'images/char-horn-girl.png',
+      'images/char-pink-girl.png',
+      'images/char-princess-girl.png'
       ]);
   Resources.onReady(init);
 
