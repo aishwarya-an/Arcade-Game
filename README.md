@@ -1,6 +1,12 @@
-frontend-nanodegree-arcade-game
-===============================
+#Arcade Game - Frogger
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+##Description  
+The game starts with a player on the brick grid, which is at the bottom of the screen and a number of enemies/bugs moving on the grass patch at the middle of the screen. The player has to successfully reach the river, which is at the top of the screen.
+He has to avoid the bugs, collect the gems and reach the river in order to win the game. He is provided with 3 lives and he loses a life every time he collides with a bug. When the player loses all lives, the game ends.  
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+A menu is provided at the beginning of each game showing the score of the previous game and providing the option of choosing the player character.  
+
+##Install
+* Download the source code.
+* In order to run the game, open the `index.html` file in a web browser.
+* In order to play the game, first choose the character of the player on the menu screen. When the game starts, use the arrow keys to move your player along the grid. When the game ends, the menu screen appears again.  
