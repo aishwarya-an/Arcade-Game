@@ -170,55 +170,6 @@ var Engine = (function(global) {
     menu();
   }
 
-  /* This function draws the main menu of the game. The main menu is used to 
-   * choose the type of player. This is called at the end of the game i.e
-   * if the player wins or loses.
-   */
-  function menu() {
-	// Displaying the game description
-	var gameDescription1 = "Collect all Gems, avoid the Bugs and reach the Water to win!";
-    var gameDescription2 ="Use arrow keys to move your player";
-    var gameDescription3 = "...Good Luck!";
-    var gameDescription4 = "Score increases by:";
-    var gameDescription5 = "30 if you collect gems";
-    var gameDescription6 = "20 if you reach the river";
-    ctx.font = 'bold 20pt Impact';
-    ctx.textAlign = 'center';
-
-    ctx.fillStyle = '#556B2F';
-    ctx.fillText(gameDescription1, canvas.width/2, 78);
-    ctx.fillText(gameDescription2, canvas.width/2, 110);
-    ctx.fillText(gameDescription4, canvas.width/2, 160);
-    ctx.fillText(gameDescription5, canvas.width/2, 200);
-    ctx.fillText(gameDescription6, canvas.width/2, 240);
-    ctx.fillText(gameDescription3, canvas.width/2, 310);
-
-    ctx.strokeStyle = '#cccccc';
-    ctx.lineWidth = 1;
-    ctx.strokeText(gameDescription1, canvas.width/2, 78);
-    ctx.strokeText(gameDescription2, canvas.width/2, 110);
-    ctx.strokeText(gameDescription4, canvas.width/2, 160);
-    ctx.strokeText(gameDescription5, canvas.width/2, 200);
-    ctx.strokeText(gameDescription6, canvas.width/2, 240);
-    ctx.strokeText(gameDescription3, canvas.width/2, 310);
-
-		// Displaying the characters for the player to choose
-		ctx.font = "bold 20pt Verdana";
-    ctx.textAlign = 'center';
-
-    ctx.fillStyle = "#556B2F";
-    ctx.fillText("Choose your Player. Press Enter to Start Game", 
-        (canvas.width*0.5), 340);
-
-    ctx.strokeStyle = '#cccccc';
-    ctx.lineWidth = 1;
-    ctx.strokeText("Choose your Player. Press Enter to Start Game", 
-        (canvas.width*0.5), 340);
-
-    selector.render();
-    for (var i = 0; i < characters.length; i++)
-      ctx.drawImage(Resources.get(characters[i]), i * 101 + 152, 350);
-  }
 
   /* Go ahead and load all of the images we know we're going to need to
    * draw our game level. Then set init as the callback method, so that when
