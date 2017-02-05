@@ -1,7 +1,7 @@
 // Constants
 var PLAYER_BOTTOM_BOUNDARY = 405;
-var PLAYER_RIGHT_BOUNDARY = 500;
-var PLAYER_X = 200;
+var PLAYER_RIGHT_BOUNDARY = 900;
+var PLAYER_X = 500;
 var LIVES = 3;
 
 
@@ -30,7 +30,7 @@ Enemy.prototype.update = function(dt) {
   // all computers.
 
   // Checking whether the enemy runs out of canvas
-  if(this.x + (this.speed * 5 * dt) < 505)
+  if(this.x + (this.speed * 5 * dt) < 905)
     this.x += this.speed * 5 * dt;
   else
     this.x = -5;
@@ -65,7 +65,7 @@ Player.prototype.update = function() {
   // If the player has moved out of the right boundary
   else if(this.x > PLAYER_RIGHT_BOUNDARY)
     this.x = PLAYER_RIGHT_BOUNDARY;
-  // If the player has reached the river, then reset the game after 500ms
+  // If the player has reached the river, then increase score by 20
   if(this.y <= 0){
     score.increase(20);
     this.reset();
@@ -142,7 +142,7 @@ Player.prototype.catchGems = function(gems){
     if(Math.abs(this.x - gems[i].x) < 30 &&
         Math.abs(this.y - gems[i].y) < 30){
       score.increase(30);
-      gems[i].x = 600;
+      gems[i].x = 1000;
     }
   }
 };
