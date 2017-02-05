@@ -67,13 +67,8 @@ Player.prototype.update = function() {
     this.x = PLAYER_RIGHT_BOUNDARY;
   // If the player has reached the river, then reset the game after 500ms
   if(this.y <= 0){
-    // p is used in the setTimeout callback instead of 'this' because the
-    // 'this' in setTimeout callback does not refer to the Player instance
-    // Hence, 'this' is stored in p.
-    var p = this;
-    setTimeout(function(){
-        p.reset();
-        }, 500);
+    score.increase(20);
+    this.reset();
   }
   else if(this.y > PLAYER_BOTTOM_BOUNDARY)
     this.y = PLAYER_BOTTOM_BOUNDARY;
@@ -143,14 +138,14 @@ var Life = function(){
 };
 
 
-// description: draws the lives on the canvas
+// description Draws the lives on the canvas
 Life.prototype.render = function(){
   for(var i = 0, j = 10; i < this.lives; i++, j += 40)
     ctx.drawImage(Resources.get(this.sprite), j, 540, 40, 50);
 };
 
 
-/* @description: removes a life in case of collisions and resets the game
+/* @description Removes a life in case of collisions and resets the game
  * if the player loses all lives
 */
 Life.prototype.decrease = function(){
@@ -160,11 +155,38 @@ Life.prototype.decrease = function(){
 }
 
 
+/* @description Score of the game
+ * @constructor
+*/
+var Score = function(){
+  this.score = 0;
+};
+
+// @description Draws the score on the screen
+Score.prototype.render = function(){
+  ctx.font = "25pt Impact";
+  ctx.strokeStyle = "white";
+  ctx.fillStyle = "black";
+  ctx.strokeText("SCORE:" + this.score.toString(), 360, 580);
+  ctx.fillText("SCORE:" + this.score.toString(), 360, 580);
+};
+
+/* @description Increases the score if the player reaches the river(by 20) or 
+ * gets a gem(by 30) or a key(by 50).
+ * @param {number} points - Score gets incremented by this value. 
+*/
+Score.prototype.increase = function(points){
+  this.score += points;
+}
+
+
+
 // Instantiating the Enemy, Player, Life class to run the game
 var allEnemies = [new Enemy(60, 90), new Enemy(145, 50), new Enemy(225, 40), 
     new Enemy(60, 25), new Enemy(145, 60)];
 var player = new Player();
 var playerLife = new Life();
+var score = new Score();
 
 
 /* @description Listens for key presses and sends the keys to the
