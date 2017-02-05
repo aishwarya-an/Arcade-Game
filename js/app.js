@@ -29,6 +29,7 @@ var Selector = function() {
   this.sprite = 'images/Selector.png';
   this.x = 152;
   this.y = 380;
+  // selected represents the column of the character selected.
   this.selected = 0;
 };
 
@@ -49,6 +50,7 @@ Selector.prototype.handleInput = function(input) {
     this.x += 101;
     this.selected++;
   } else if (input == 'enter') {
+    // On pressing enter, a new game begins with 3 lives and 0 score.
     selectedPlayer = this.selected;
     playing = true;
     playerLife.lives = LIVES;
@@ -155,7 +157,7 @@ Player.prototype.handleInput = function(input) {
     this.y -= 83;
   if (input == 'right' && this.x + 100 < PLAYER_RIGHT_BOUNDARY)
     this.x += 100;
-  if (input == 'down' && this.y + 83 < PLAYER_BOTTOM_BOUNDARY)
+  if (input == 'down' && this.y + 83 <= PLAYER_BOTTOM_BOUNDARY)
     this.y += 83;
 };
 
@@ -200,6 +202,7 @@ Player.prototype.catchGems = function(gems) {
     // Check whether the player and gem collide
     if (Math.abs(this.x - gems[i].x) < 30 &&
       Math.abs(this.y - gems[i].y) < 30) {
+      // If so, increase score and remove the gem.
       score.increase(30);
       getGemAudio.play();
       gems[i].x = 1000;
@@ -232,6 +235,7 @@ Life.prototype.render = function() {
 Life.prototype.decrease = function() {
   this.lives--;
   if (!this.lives) {
+    // If the player loses all lives, then game ends.
     playing = false;
   }
 };
@@ -349,7 +353,9 @@ document.addEventListener('keyup', function(e) {
     39: 'right',
     40: 'down'
   };
-
+  
+  // To check state of the game in which the keys are used and call the 
+  // corresponding input handling method.
   if (playing)
     player.handleInput(allowedKeys[e.keyCode]);
   else
