@@ -2,11 +2,14 @@
 var PLAYER_BOTTOM_BOUNDARY = 405;
 var PLAYER_RIGHT_BOUNDARY = 500;
 var PLAYER_X = 200;
+var LIVES = 3;
 
 
-// Enemies our player must avoid
-// Parameter: y, the y-co-ordinate of the enemy
-// Parameter: speed, the speed of enemy moving
+/* @description Enemies our player must avoid
+ * @constructor
+ * @param {number} y - the y-co-ordinate of the enemy
+ * @param {number} speed - the speed of enemy moving
+*/
 var Enemy = function(y, speed) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
@@ -14,13 +17,14 @@ var Enemy = function(y, speed) {
   this.x = 0;
   this.y = y;
   this.speed = speed;
-  this.width = 50;
+  this.width = 80;
   this.height = 70;
 };
 
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+/* @description Updates the enemy's position, required method for game
+ * @param {number} dt - a time delta between ticks
+*/
 Enemy.prototype.update = function(dt) {
   // The dt parameter will ensure the game runs at the same speed for
   // all computers.
@@ -33,13 +37,15 @@ Enemy.prototype.update = function(dt) {
 };
 
 
-// Draw the enemy on the screen, required method for game
+// @description Draws the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 
-// Player class 
+/* @description Player of the game
+ * @constructor
+*/
 var Player = function() {
   this.x = PLAYER_X;
   this.y = PLAYER_BOTTOM_BOUNDARY;
@@ -49,7 +55,9 @@ var Player = function() {
 };
 
 
-// Update the player's position if the player has moved out of boundary
+/* @description Updates the player's position if the player has moved out 
+ * of boundary
+*/
 Player.prototype.update = function() {
   // If player has moved out of the left boundary
   if(this.x < 0)
@@ -75,15 +83,16 @@ Player.prototype.update = function() {
 };
 
 
-// Draw the player on the screen
+// @description Draws the player on the screen
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 
-// Moves the player in case of key presses.
-// Called by the document's EventListener() for key presses.
-// Parameter: input, a string containing the value of keypress
+/* @description Moves the player in case of key presses. 
+ * Called by the document's EventListener() for key presses.
+ * @param {string} input - a string containing the value of keypress
+*/
 Player.prototype.handleInput = function(input) {
   if(input == 'left' && this.x - 100 >= 0)
     this.x -= 100;
@@ -96,22 +105,20 @@ Player.prototype.handleInput = function(input) {
 };
 
 
-// Resets the game, either in case of player reaching the river or 
-// in case of player colliding with enemy.
+/* @description Resets the game, either in case of player reaching the river or 
+ * in case of player colliding with enemy.
+*/
 Player.prototype.reset = function(){
   this.x = PLAYER_X;
   this.y = PLAYER_BOTTOM_BOUNDARY;
 };
 
 
-// Checks for collisions of the player with the enemies and resets the game
-// the player has collided with the enemy.
-// Parameter: enemies, an array of all the enemies
+/* @description Checks for collisions of the player with the enemies and 
+ * resets the game if the player has collided with the enemy.
+ * @param {Object[]} enemies - an array of all the enemies
+*/
 Player.prototype.checkCollisions = function(enemies){
-  // player stores 'this' so that it can be used in the setTimeout callback
-  // with the correct binding.
-  var player = this;
-
   // Iterate through every enemy
   for(var i = 0; i < enemies.length; i++){
     // Check whether the player and the enemy collide 
@@ -120,24 +127,49 @@ Player.prototype.checkCollisions = function(enemies){
         player.y < enemies[i].y + enemies[i].height &&
         player.y + player.height > enemies[i].y){
       // If so, then reset the game after 100ms.
-      setTimeout(function(){
-          player.reset();
-          }, 100);
+      playerLife.decrease();
+      this.reset();
     }
   }
 };
 
 
-// Placing all enemies in an array.
+/* @description Life of the player
+ * @constructor
+*/
+var Life = function(){
+  this.lives = LIVES;
+  this.sprite = 'images/Heart.png';
+};
+
+
+// description: draws the lives on the canvas
+Life.prototype.render = function(){
+  for(var i = 0, j = 10; i < this.lives; i++, j += 40)
+    ctx.drawImage(Resources.get(this.sprite), j, 540, 40, 50);
+};
+
+
+/* @description: removes a life in case of collisions and resets the game
+ * if the player loses all lives
+*/
+Life.prototype.decrease = function(){
+  this.lives--;
+  if(!this.lives)
+    this.lives = LIVES;
+}
+
+
+// Instantiating the Enemy, Player, Life class to run the game
 var allEnemies = [new Enemy(60, 90), new Enemy(145, 50), new Enemy(225, 40), 
     new Enemy(60, 25), new Enemy(145, 60)];
-
-// Instantiating the Player class. 
 var player = new Player();
+var playerLife = new Life();
 
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+/* @description Listens for key presses and sends the keys to the
+ * player.handleInput() method.
+*/
 document.addEventListener('keyup', function(e) {
   var allowedKeys = {
     37: 'left',
