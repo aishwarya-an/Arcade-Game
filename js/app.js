@@ -1,8 +1,10 @@
 // Constants
 var PLAYER_BOTTOM_BOUNDARY = 405;
 var PLAYER_RIGHT_BOUNDARY = 900;
-var PLAYER_X = 500;
+var PLAYER_X = 400;
 var LIVES = 3;
+var collisionAudio = new Audio('audio/loseLife.wav');
+var getGemAudio = new Audio('audio/getGem.wav');
 
 
 /* @description Enemies our player must avoid
@@ -126,6 +128,7 @@ Player.prototype.checkCollisions = function(enemies){
         this.y + this.height > enemies[i].y){
       // If so, then reset the game after 100ms.
       playerLife.decrease();
+      collisionAudio.play();
       this.reset();
     }
   }
@@ -142,6 +145,7 @@ Player.prototype.catchGems = function(gems){
     if(Math.abs(this.x - gems[i].x) < 30 &&
         Math.abs(this.y - gems[i].y) < 30){
       score.increase(30);
+      getGemAudio.play();
       gems[i].x = 1000;
     }
   }
@@ -219,11 +223,11 @@ Gem.prototype.render = function(){
 
 // Instantiating the Enemy, Player, Life class to run the game
 var allEnemies = [new Enemy(60, 90), new Enemy(145, 50), new Enemy(225, 40), 
-    new Enemy(60, 25), new Enemy(145, 60)];
+    new Enemy(60, 25), new Enemy(145, 60), new Enemy(305, 85)];
 var player = new Player();
 var playerLife = new Life();
 var score = new Score();
-var allGems = [new Gem(100, 60), new Gem(200, 145), new Gem(300, 225)];
+var allGems = [new Gem(400, 60), new Gem(800, 145), new Gem(100, 145)];
 
 /* @description Listens for key presses and sends the keys to the
  * player.handleInput() method.
