@@ -75,6 +75,9 @@ Player.prototype.update = function() {
 
   // Check for collisions with enemies
   this.checkCollisions(allEnemies);
+
+  // Check for collisions with gems
+  this.catchGems(allGems);
 };
 
 
@@ -117,13 +120,29 @@ Player.prototype.checkCollisions = function(enemies){
   // Iterate through every enemy
   for(var i = 0; i < enemies.length; i++){
     // Check whether the player and the enemy collide 
-    if(player.x < enemies[i].x + enemies[i].width && 
-        player.x + player.width > enemies[i].x &&
-        player.y < enemies[i].y + enemies[i].height &&
-        player.y + player.height > enemies[i].y){
+    if(this.x < enemies[i].x + enemies[i].width && 
+        this.x + this.width > enemies[i].x &&
+        this.y < enemies[i].y + enemies[i].height &&
+        this.y + this.height > enemies[i].y){
       // If so, then reset the game after 100ms.
       playerLife.decrease();
       this.reset();
+    }
+  }
+};
+
+
+/* @description Checks if the player got gems and increments score if yes.
+ * @param {Object[]} gems - an array containing all the gems
+*/
+Player.prototype.catchGems = function(gems){
+  // Iterate through every gem
+  for(var i = 0; i < gems.length; i++){
+    // Check whether the player and gem collide
+    if(Math.abs(this.x - gems[i].x) < 30 &&
+        Math.abs(this.y - gems[i].y) < 30){
+      score.increase(30);
+      gems[i].x = 600;
     }
   }
 };
@@ -177,8 +196,25 @@ Score.prototype.render = function(){
 */
 Score.prototype.increase = function(points){
   this.score += points;
-}
+};
 
+
+/* @description Gems that the player has to get
+ * @constructor
+ * @param {number} x - the x co-ordinate of the gem
+ * @param {number} y - the y co-ordinate of the gem
+*/
+var Gem = function(x, y){
+  this.sprite = 'images/Gem\ Blue.png';
+  this.x = x;
+  this.y = y;
+};
+
+
+// @description Draws the gem on the canvas
+Gem.prototype.render = function(){
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
 
 
 // Instantiating the Enemy, Player, Life class to run the game
@@ -187,7 +223,7 @@ var allEnemies = [new Enemy(60, 90), new Enemy(145, 50), new Enemy(225, 40),
 var player = new Player();
 var playerLife = new Life();
 var score = new Score();
-
+var allGems = [new Gem(100, 60), new Gem(200, 145), new Gem(300, 225)];
 
 /* @description Listens for key presses and sends the keys to the
  * player.handleInput() method.
