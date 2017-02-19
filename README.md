@@ -6,6 +6,8 @@ He has to avoid the bugs, collect the gems and reach the river in order to win t
 
 A menu is provided at the beginning of each game showing the score of the previous game and providing the option of choosing the player character.  
 
+**More features will be added to the game.**    
+
 ##Install and Run
 * Run a live version of the game at [link](https://aishwarya-an.github.io/Arcade-Game/).  
 ***OR***  
